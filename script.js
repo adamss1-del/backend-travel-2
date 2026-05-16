@@ -1,46 +1,31 @@
 
-const destinationData = {
-    egypt: {
-        title: "The Eternal Nile",
-        desc: "Experience the pyramids at sunrise. Our curated list includes private balcony views and expert-led female solo travel tours to Giza and Luxor.",
-        img: "egypt.jpg",
-        weather: "Sunny 29°C",
-        dining: "139 Pavilion",
-        season: "Oct - April"
-    },
-    italy: {
-        title: "Amalfi Serenity",
-        desc: "Cruise the coastline on a vintage scooter. Perfect for travelers seeking slow food, hidden coves, and the legendary Mediterranean sun.",
-        img: "mediterranean.jpg",
-        weather: "Breezy 24°C",
-        dining: "Da Paolino",
-        season: "May - Sept"
-    },
-    bali: {
-        title: "Ubud Wellness",
-        desc: "A sanctuary for the soul. Focus on yoga, local temple ceremonies, and jungle retreats designed for ultimate peace and safety.",
-        img: "bali.webp",
-        weather: "Humid 30°C",
-        dining: "Locavore",
-        season: "April - Oct"
-    },
-    greece: {
-        title: "Santorini Dreams",
-        desc: "Watch the world's most famous sunset from Oia. We recommend our partner villas with private caldera-view pools.",
-        img: "santorini.jpg",
-        weather: "Clear 26°C",
-        dining: "Ambrosia",
-        season: "June - Sept"
-    },
-    safari: {
-        title: "Kenya Wilds",
-        desc: "Luxury glamping in the heart of the Mara. Witness the Great Migration from your tent with 24/7 private concierge support.",
-        img: "safari.webp",
-        weather: "Cool 21°C",
-        dining: "The Carnivore",
-        season: "July - Oct"
-    }
-};
+const API_URL = "http://localhost:5000/api";
+
+function runDiscovery() {
+    const country = document.getElementById('countrySelect').value;
+    if (!country) return alert("Please select a destination");
+
+    fetch(`${API_URL}/destinations`)
+        .then(res => res.json())
+        .then(data => {
+            const selected = data.find(d => d.id === country);
+
+            if (!selected) {
+                alert("Destination not found in database");
+                return;
+            }
+
+            document.getElementById('resultImg').src = selected.img;
+            document.getElementById('resultTitle').innerText = selected.title;
+            document.getElementById('resultDesc').innerText = selected.desc;
+            document.getElementById('resultTag').innerText = selected.weather;
+            document.getElementById('resDining').innerText = selected.dining;
+            document.getElementById('resSeason').innerText = selected.season;
+
+            document.getElementById('resultsArea').style.display = 'block';
+        })
+        .catch(err => console.error(err));
+}
 
 function toggleModal() {
     const modal = document.getElementById('authModal');
