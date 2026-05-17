@@ -1,0 +1,33 @@
+const mongoose = require('mongoose');
+const { Destination } = require('./models/Schemas');
+
+mongoose.connect('mongodb://localhost:27017/travelmate')
+    .then(async () => {
+        console.log("Connected to MongoDB!");
+        
+        // Clear old data
+        await Destination.deleteMany({});
+
+        // Create test destination
+        const egypt = new Destination({
+            id: "egypt",
+            country: "Egypt",
+            title: "Pyramids of Giza",
+            desc: "A stunning journey into ancient history.",
+            img: "https://images.unsplash.com/photo-1539650116574-8efeb43e2750?q=80&w=1000&auto=format&fit=crop",
+            dining: "Naguib Mahfouz Cafe",
+            months: [{
+                month: "05", // May
+                weather: "Sunny",
+                temperature: "32°C",
+                season: "Shoulder Season",
+                activities: ["Pyramid Tour", "Nile Cruise"],
+                bestPlaces: ["Cairo", "Luxor"]
+            }]
+        });
+
+        await egypt.save();
+        console.log("Egypt added to database!");
+        process.exit();
+    })
+    .catch(err => console.log(err));
