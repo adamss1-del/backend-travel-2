@@ -8,12 +8,24 @@ const UserSchema = new mongoose.Schema({
 
 const DestinationSchema = new mongoose.Schema({
     id: String,
+    country: String,
+
     title: { type: String, required: true },
     desc: String,
     img: String,
-    weather: String,
+
     dining: String,
-    season: String
+
+    months: [
+        {
+            month: String,
+            weather: String,
+            temperature: String,
+            season: String,
+            activities: [String],
+            bestPlaces: [String]
+        }
+    ]
 });
 
 module.exports = {
