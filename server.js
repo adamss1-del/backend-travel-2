@@ -12,6 +12,7 @@ const jwt = require('jsonwebtoken');
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use(express.static('public'));
 app.use(logger);
 
 // Database Connection
@@ -37,6 +38,29 @@ app.post('/api/auth/register', async (req, res) => {
 
 // 2. GET: Retrieve Destinations (Read Operation)
 app.get('/api/destinations', async (req, res) => {
+    app.get('/api/discover', async (req, res) => {
+    const { country, month } = req.query;
+
+    const destination = await Destination.findOne({ id: country });
+
+    if (!destination) {
+        return res.status(404).json({ msg: "Destination not found" });
+    }
+
+    const monthData = destination.months.find(m => m.month === month);
+
+    if (!monthData) {
+        return res.status(404).json({ msg: "No data for this month" });
+    }
+
+    res.json({
+        title: destination.title,
+        desc: destination.desc,
+        img: destination.img,
+        dining: destination.dining,
+        ...monthData
+    });
+});
     const list = await Destination.find();
     res.json(list);
 });
