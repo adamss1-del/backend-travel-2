@@ -55,4 +55,25 @@ function handleLogin() {
     } else {
         alert("Please enter a valid email");
     }
+}        })
+        .catch(err => console.error(err));
+}
+
+// MODAL
+function toggleModal() {
+    const modal = document.getElementById('authModal');
+    modal.classList.toggle('hidden');
+}
+
+// LOGIN
+function handleLogin() {
+    const email = document.getElementById('userEmail').value;
+
+    if (email.includes('@')) {
+        document.getElementById('navActions').innerHTML =
+            `<span class='text-sm font-bold text-[#c5a36c]'>Premium Member: ${email.split('@')[0]}</span>`;
+        toggleModal();
+    } else {
+        alert("Please enter a valid email");
+    }
 }
