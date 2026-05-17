@@ -1,61 +1,58 @@
-
 const API_URL = "http://localhost:5000/api";
 
+// MAIN FUNCTION
 function runDiscovery() {
     const country = document.getElementById('countrySelect').value;
-    if (!country) return alert("Please select a destination");
+    const monthInput = document.querySelector('input[type="month"]').value;
 
-    fetch(`${API_URL}/destinations`)
+    if (!country || !monthInput) {
+        return alert("Please select country and month");
+    }
+
+    const month = monthInput.split("-")[1];
+
+    fetch(`${API_URL}/discover?country=${country}&month=${month}`)
         .then(res => res.json())
         .then(data => {
-            const selected = data.find(d => d.id === country);
 
-            if (!selected) {
-                alert("Destination not found in database");
-                return;
-            }
+            document.getElementById('resultImg').src = data.img;
+            document.getElementById('resultTitle').innerText = data.title;
+            document.getElementById('resultDesc').innerText = data.desc;
 
-            document.getElementById('resultImg').src = selected.img;
-            document.getElementById('resultTitle').innerText = selected.title;
-            document.getElementById('resultDesc').innerText = selected.desc;
-            document.getElementById('resultTag').innerText = selected.weather;
-            document.getElementById('resDining').innerText = selected.dining;
-            document.getElementById('resSeason').innerText = selected.season;
+            document.getElementById('resultTag').innerText =
+                `${data.weather} ${data.temperature}`;
 
-            document.getElementById('resultsArea').style.display = 'block';
+            document.getElementById('resDining').innerText = data.dining;
+            document.getElementById('resSeason').innerText = data.season;
+
+            document.getElementById('resActivities').innerText =
+                data.activities.join(", ");
+
+            document.getElementById('resPlaces').innerText =
+                data.bestPlaces.join(", ");
+
+            const area = document.getElementById('resultsArea');
+            area.style.display = 'block';
+            area.scrollIntoView({ behavior: 'smooth' });
         })
         .catch(err => console.error(err));
 }
 
+// MODAL
 function toggleModal() {
     const modal = document.getElementById('authModal');
     modal.classList.toggle('hidden');
 }
 
+// LOGIN
 function handleLogin() {
     const email = document.getElementById('userEmail').value;
-    if(email.includes('@')) {
-        document.getElementById('navActions').innerHTML = `<span class='text-sm font-bold text-[#c5a36c]'>Premium Member: ${email.split('@')[0]}</span>`;
+
+    if (email.includes('@')) {
+        document.getElementById('navActions').innerHTML =
+            `<span class='text-sm font-bold text-[#c5a36c]'>Premium Member: ${email.split('@')[0]}</span>`;
         toggleModal();
     } else {
-        alert("Please enter a valid email for the Premium experience.");
+        alert("Please enter a valid email");
     }
-}
-
-function runDiscovery() {
-    const country = document.getElementById('countrySelect').value;
-    if(!country) return alert("Please select a destination");
-
-    const data = destinationData[country];
-    const area = document.getElementById('resultsArea');
-    
-    document.getElementById('resultImg').src = data.img;
-    document.getElementById('resultTitle').innerText = data.title;
-    document.getElementById('resultDesc').innerText = data.desc;
-    document.getElementById('resultTag').innerText = data.weather;
-    document.getElementById('resDining').innerText = data.dining;
-    document.getElementById('resSeason').innerText = data.season;
-
-    area.style.display = 'block';
-    area.scrollIntoView({ behavior: 'smooth' });
 }
