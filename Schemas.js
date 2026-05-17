@@ -9,13 +9,10 @@ const UserSchema = new mongoose.Schema({
 const DestinationSchema = new mongoose.Schema({
     id: String,
     country: String,
-
     title: { type: String, required: true },
     desc: String,
     img: String,
-
     dining: String,
-
     months: [
         {
             month: String,
